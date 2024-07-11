@@ -12,6 +12,7 @@ GeoPoint Tracer is a versatile application designed to handle geographical point
 - Map Views: Choose between different map views, such as OpenStreetMap and Google Satellite.
 
 # How to Use
+***(Use `python`, `python2`, or `python3`, depending on what version of python you have. Same for pip, you might need to use `pip`, `pip2`, or `pip3`)***
 ## Command-Line Interface (CLI)
 ### Requirements
 - Python 3.x
@@ -19,23 +20,25 @@ GeoPoint Tracer is a versatile application designed to handle geographical point
 
 ### Installation
 Install the required library using pip:
-`pip install folium`
+```
+pip install folium
+```
 
 ### Running the CLI Version
 #### With Input File:
 ```
-python geo_point_cli.py inputfile.json
+python geopoint_tracer_cli_v1.0.py inputfile.json
 ```
 This command loads points from inputfile.json and then prompts you to select a map view or export the points as a JSON file.
 
 #### Without Input File:
 ```
-python geo_point_cli.py
+python geopoint_tracer_cli_v1.0.py
 ```
 
 This command allows you to manually enter geographical points. Enter latitude and longitude values, typing 'x' to stop entering points. Afterward, you can select a map view or export the points.
 
-Options:
+#### Options after inputing the Geo Points:
 
 - 1: OpenStreetMap
 - 2: Google Satellite
@@ -56,23 +59,23 @@ pip install folium
 
 ### Running the Application:
 ```
-python geo_point_gui.py
+python ggeopoint_tracer_gui_v1.0.py
 ```
 This command opens the graphical user interface.
 
 ### Using the GUI:
 
-Add Point: Enter latitude and longitude in the respective fields and click "Add Point".
-Load Points: Click "Load Points from File" to select and load points from a JSON file.
-Edit Point: Select a point from the list and click "Edit Point" or double-click a point to modify it.
-Delete Point: Select a point from the list and click "Delete Point" to remove it.
-Clear Points: Click "Clear All Points" to remove all points from the list.
-Select Map View: Choose the desired map view from the dropdown menu.
-Save Map: Click "Save Map" to save the map with the points to an HTML file.
-Export Points: Click "Export Points as JSON" to save the points to a JSON file.
+- Add Point: Enter latitude and longitude in the respective fields and click "Add Point".
+- Load Points: Click "Load Points from File" to select and load points from a JSON file.
+- Edit Point: Select a point from the list and click "Edit Point" or double-click a point to modify it.
+- Delete Point: Select a point from the list and click "Delete Point" to remove it.
+- Clear Points: Click "Clear All Points" to remove all points from the list.
+- Select Map View: Choose the desired map view from the dropdown menu.
+- Save Map: Click "Save Map" to save the map with the points to an HTML file.
+- Export Points: Click "Export Points as JSON" to save the points to a JSON file.
 
 # Main Files
-- geo_point_cli.py: Contains the CLI version of the GeoPoint Tracer application.
-- geo_point_gui.py: Contains the GUI version of the GeoPoint Tracer application.
+- geopoint_tracer_cli_v1.0.py: Contains the CLI version of the GeoPoint Tracer application.
+- ggeopoint_tracer_gui_v1.0.py: Contains the GUI version of the GeoPoint Tracer application.
 
 This dual-interface approach ensures that GeoPoint Tracer can be used efficiently in both graphical and terminal environments, making it a powerful tool for managing and visualizing geographical data.
