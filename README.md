@@ -8,7 +8,7 @@ GeoPoint Tracer is a versatile application designed to handle geographical point
 - Clear Points: Clear all points from the list.
 - Load Points: Load points from a JSON file.
 - Save Map: Visualize the points on a map and save it as an HTML file.
-- Export Points: Export the points to a JSON file.
+- Export Points: Export the points to a JSON file or bare Text file.
 - Map Views: Choose between different map views, such as OpenStreetMap and Google Satellite.
 
 # How to Use
@@ -42,6 +42,7 @@ This command allows you to manually enter geographical points. Enter latitude an
 
 - 1: OpenStreetMap
 - 2: Google Satellite
+- t: Export points as a Text file
 - e: Export points as JSON file
 - q: Quit the program
 
@@ -72,7 +73,7 @@ This command opens the graphical user interface.
 - Clear Points: Click "Clear All Points" to remove all points from the list.
 - Select Map View: Choose the desired map view from the dropdown menu.
 - Save Map: Click "Save Map" to save the map with the points to an HTML file.
-- Export Points: Click "Export Points as JSON" to save the points to a JSON file.
+- Export Points: Click "Export Points as JSON" to save the points to a JSON file. Or "Bare" to export as a bare file
 
 # Main Files
 - geopoint_tracer_cli_v1.0.py: Contains the CLI version of the GeoPoint Tracer application.

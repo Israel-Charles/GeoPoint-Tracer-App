@@ -1,17 +1,16 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox, simpledialog
+from tkinter import filedialog, messagebox
 import folium
 import json
+import csv
 
 class GeoPointApp:
     def __init__(self, root):
         self.root = root
         self.root.title("GeoPoint Tracer App")
 
-        # List to store geographical points
-        self.points = []
+        self.points = []  # List to store geographical points
 
-        # Map view options
         self.map_views = {
             "OpenStreetMap": "openstreetmap",
             "Google Satellite": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
@@ -21,11 +20,9 @@ class GeoPointApp:
 
     def init_gui(self):
         """Initialize the GUI layout."""
-        # Main frame for entry and buttons
         self.frame = tk.Frame(self.root)
         self.frame.pack(pady=10)
 
-        # Latitude and Longitude Entry Fields
         self.lat_label = tk.Label(self.frame, text="Latitude:")
         self.lat_label.grid(row=0, column=0)
         self.lat_entry = tk.Entry(self.frame)
@@ -36,23 +33,19 @@ class GeoPointApp:
         self.lon_entry = tk.Entry(self.frame)
         self.lon_entry.grid(row=1, column=1)
 
-        # Add Point and Load Points Buttons
         self.add_button = tk.Button(self.frame, text="Add Point", command=self.add_point)
         self.add_button.grid(row=2, column=0, columnspan=2, pady=5)
 
         self.load_button = tk.Button(self.frame, text="Load Points from File", command=self.load_points_from_file)
         self.load_button.grid(row=3, column=0, columnspan=2, pady=5)
 
-        # Listbox to display points
         self.points_listbox = tk.Listbox(self.root, width=50, selectmode=tk.SINGLE)
         self.points_listbox.pack(pady=10)
-        self.points_listbox.bind('<Double-1>', self.on_double_click)
+        self.points_listbox.bind('<Double-1>', self.edit_point)
 
-        # Action buttons frame
         self.actions_frame = tk.Frame(self.root)
         self.actions_frame.pack(pady=10)
 
-        # Edit, Delete, and Clear Buttons
         self.edit_button = tk.Button(self.actions_frame, text="Edit Point", command=self.edit_point)
         self.edit_button.grid(row=0, column=0, padx=5)
 
@@ -62,61 +55,74 @@ class GeoPointApp:
         self.clear_button = tk.Button(self.actions_frame, text="Clear All Points", command=self.clear_points)
         self.clear_button.grid(row=0, column=2, padx=5)
 
-        # Export Button
-        self.export_button = tk.Button(self.root, text="Export Points as JSON", command=self.export_points_as_json)
-        self.export_button.pack(pady=5)
+        self.export_json_button = tk.Button(self.root, text="Export Points as JSON", command=self.export_points_as_json)
+        self.export_json_button.pack(pady=5)
 
-        # Map View Options
+        self.export_txt_button = tk.Button(self.root, text="Export Points as Text", command=self.export_points_as_txt)
+        self.export_txt_button.pack(pady=5)
+
         self.map_view_label = tk.Label(self.root, text="Select Map View:")
         self.map_view_label.pack()
+
         self.map_view_var = tk.StringVar(value="OpenStreetMap")
         self.map_view_menu = tk.OptionMenu(self.root, self.map_view_var, *self.map_views.keys())
         self.map_view_menu.pack(pady=5)
 
-        # Save Button
         self.save_button = tk.Button(self.root, text="Save Map", command=self.save_map)
         self.save_button.pack(pady=5)
 
     def add_point(self):
-        """Add a geographical point to the list."""
         try:
             lat = float(self.lat_entry.get())
             lon = float(self.lon_entry.get())
             self.points.append((lat, lon))
-            self.points_listbox.insert(tk.END, f"Lat: {lat}, Lon: {lon}")
+            self.points_listbox.insert(tk.END, f"{lat}, {lon}")
             self.lat_entry.delete(0, tk.END)
             self.lon_entry.delete(0, tk.END)
         except ValueError:
             messagebox.showerror("Invalid input", "Please enter valid latitude and longitude values")
 
     def load_points_from_file(self):
-        """Load geographical points from a JSON file."""
-        file_path = filedialog.askopenfilename()
+        file_path = filedialog.askopenfilename(filetypes=[("All Files", "*.*"), ("JSON Files", "*.json"), ("Text Files", "*.txt")])
         if file_path:
-            try:
-                with open(file_path, 'r') as file:
-                    data = json.load(file)
-                    self.extract_points(data)
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to load points: {e}")
-
-    def extract_points(self, data):
-        """Extract geographical points from JSON data."""
-        if isinstance(data, dict):
-            if "lat" in data and "lon" in data:
+            if file_path.lower().endswith('.json'):
                 try:
-                    lat = float(data["lat"])
-                    lon = float(data["lon"])
-                    self.points.append((lat, lon))
-                    self.points_listbox.insert(tk.END, f"Lat: {lat}, Lon: {lon}")
-                except ValueError:
-                    pass
-            else:
-                for key, value in data.items():
-                    self.extract_points(value)
-        elif isinstance(data, list):
-            for item in data:
-                self.extract_points(item)
+                    with open(file_path, 'r') as file:
+                        data = json.load(file)
+                        self.extract_points(data)
+                except Exception as e:
+                    messagebox.showerror("Error", f"Failed to load points: {e}")
+            elif file_path.lower().endswith('.txt'):
+                try:
+                    with open(file_path, 'r') as file:
+                        reader = csv.reader(file)
+                        for row in reader:
+                            lat, lon = map(float, row)
+                            self.add_point(lat, lon)
+                except Exception as e:
+                    messagebox.showerror("Error", f"Failed to load points: {e}")
+
+    def export_points_as_json(self):
+        if not self.points:
+            messagebox.showerror("No points", "Please add some points before exporting")
+            return
+        file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON Files", "*.json")])
+        if file_path:
+            points_dict = [{"lat": lat, "lon": lon} for lat, lon in self.points]
+            with open(file_path, 'w') as file:
+                json.dump(points_dict, file, indent=4)
+            messagebox.showinfo("Export Successful", f"Points have been exported to {file_path}")
+
+    def export_points_as_txt(self):
+        if not self.points:
+            messagebox.showerror("No points", "Please add some points before exporting")
+            return
+        file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
+        if file_path:
+            with open(file_path, 'w') as file:
+                for lat, lon in self.points:
+                    file.write(f"{lat}, {lon}\n")
+            messagebox.showinfo("Export Successful", f"Points have been exported to {file_path}")
 
     def save_map(self):
         """Save the map with the traced points to an HTML file."""
