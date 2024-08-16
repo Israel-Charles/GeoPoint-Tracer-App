@@ -1,6 +1,9 @@
 # GeoPoint-Tracer-App
 GeoPoint Tracer is a versatile application designed to handle geographical points, allowing users to add, edit, delete, and visualize these points on a map. The application supports both a graphical user interface (GUI) and a command-line interface (CLI), providing flexibility for different user preferences and scenarios.
 
+#### Demo GUI > https://codepad.site/pad/97j0o4xx
+#### Demo CLI > https://codepad.site/pad/ayc32ryi
+
 ### Features
 - Add Points: Add geographical points by specifying latitude and longitude.
 - Edit Points: Modify existing points.
